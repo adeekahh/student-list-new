@@ -7,7 +7,49 @@
     <link rel="stylesheet" href="studentlist.css" type="text/css">
 </head>
 <body>
-  <h1>Students 1991</h1>
+  
+  <div id="wrapper">
+            
+
+    <h1 class="page-title">Student List of 1991</h1>
+
+    <div class="navigation-container">
+      <div class="filtering-buttons">
+          <button class="all-button">All</button>
+          <button class="hufflepuff-button">Hufflepuff</button>
+          <button class="gryffindor-button">Gryffindor</button>
+          <button class="ravenclaw-button">Ravenclaw</button>
+          <button class="slytherin-button">Slytherin</button>      
+      </div>
+
+      <div class="sorting-buttons">
+        <button class="firstname-button">Sort by first name</button>
+        <button class="lastname-button">Sort by last name</button>
+        <button class="house-button">Sort by house</button>
+
+      </div>
+
+  
+  </div>
+
+       
+    <ul class="student-list">
+    </ul>
+    
+
+    
+
+
+<template id="myTemplate">
+    <li class="student">
+            <h1 class="student_name"></h1>
+            <h2 class="student_house"></h2>
+    </li>
+
+ </template>
+    
+
+
     
   <script src="studentlist.js"></script>
 </body>
