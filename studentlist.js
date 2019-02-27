@@ -6,8 +6,9 @@ const link = "http://petlatkea.dk/2019/hogwarts/students.json";
 //var student = document.querySelector(".student");
 let jsonData;
 let allStudents = new Array();
-let student;
-let currentFilter = "Hufflepuff";
+let filteredList = new Array();
+
+let currentFilter = null;
 let firstname, lastname;
 
 window.addEventListener("DOMContentLoaded", init());
@@ -22,13 +23,14 @@ function loadJSON() {
     .then(jsonData => {
       //prepare objects
       prepareObjects(jsonData);
+      showStudents();
     });
 }
 
 function prepareObjects(jsonData) {
   jsonData.forEach(jsonObject => {
     //create new object
-    student = Object.create(jsonObject);
+    let student = Object.create(jsonObject);
 
     //split name into parts
     let nameParts = jsonObject.fullname.split(" ");
@@ -44,32 +46,110 @@ function prepareObjects(jsonData) {
 }
 
 /*FILTERING*/
+/*MAKE BUTTONS FILTER*/
+function filterAll() {
+  filteredList = allStudents;
+  console.log(filteredList);
+  showStudents();
+}
 
-function onlyHufflepuff(i) {
-  allStudents.forEach(function(student) {
-    if (student.house === "Hufflepuff") {
-      console.log("true");
-      return true;
-    } else {
-      console.log("false");
-      return false;
-    }
-  });
+function setCurrentFilter(housename) {
+  currentFilter = housename;
+  filterList();
+}
+
+function filterFunction(student) {
+  return student.house == currentFilter;
 }
 
 function filterList() {
-  const filteredList = allStudents.filter(
-    student => student.house === "Hufflepuff"
-  );
-  console.log(filteredList);
+  filteredList = allStudents.filter(filterFunction);
+  showStudents();
 }
 
-filterList();
+function sortByFirstName() {
+  if (filteredList.length == 0) {
+    allStudents.sort(function(a, b) {
+      if (a.firstname < b.firstname) {
+        return -1;
+      }
+      if (a.firstname > b.firstname) {
+        return 1;
+      }
+      return 0;
+    });
+  } else {
+    filteredList.sort(function(a, b) {
+      if (a.firstname < b.firstname) {
+        return -1;
+      }
+      if (a.firstname > b.firstname) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+  showStudents();
+}
 
-function sortList() {}
+function sortByLastName() {
+  if (filteredList.length == 0) {
+    allStudents.sort(function(a, b) {
+      if (a.lastname < b.lastname) {
+        return -1;
+      }
+      if (a.lastname > b.lastname) {
+        return 1;
+      }
+      return 0;
+    });
+  } else {
+    filteredList.sort(function(a, b) {
+      if (a.lastname < b.lastname) {
+        return -1;
+      }
+      if (a.lastname > b.lastname) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+  showStudents();
+}
 
-function showStudents(studentList) {
-  studentList.forEach(showSingleStudent);
+function sortByHouse() {
+  if (filteredList.length == 0) {
+    allStudents.sort(function(a, b) {
+      if (a.house < b.house) {
+        return -1;
+      }
+      if (a.house > b.house) {
+        return 1;
+      }
+      return 0;
+    });
+  } else {
+    filteredList.sort(function(a, b) {
+      if (a.house < b.house) {
+        return -1;
+      }
+      if (a.house > b.house) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+  showStudents();
+}
+
+function showStudents() {
+  if (filteredList.length == 0) {
+    document.querySelector(".student-list").innerHTML = "";
+    allStudents.forEach(showSingleStudent);
+  } else {
+    document.querySelector(".student-list").innerHTML = "";
+    filteredList.forEach(showSingleStudent);
+  }
 }
 
 function showSingleStudent(student) {
@@ -77,6 +157,8 @@ function showSingleStudent(student) {
 
   copy.querySelector(".student_name").innerHTML = student.fullname;
   copy.querySelector(".student_house").innerHTML = student.house;
+
+  //ADD CLASS FOR STYLING
 
   if (student.house == "Hufflepuff") {
     copy.querySelector(".student").classList.add("hufflepuff");

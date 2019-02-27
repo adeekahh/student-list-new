@@ -15,17 +15,17 @@
 
     <div class="navigation-container">
       <div class="filtering-buttons">
-          <button class="all-button">All</button>
-          <button class="hufflepuff-button">Hufflepuff</button>
-          <button class="gryffindor-button">Gryffindor</button>
-          <button class="ravenclaw-button">Ravenclaw</button>
-          <button class="slytherin-button">Slytherin</button>      
+          <button class="all-button" onclick='filterAll()'>All</button>
+          <button class="hufflepuff-button" onclick="setCurrentFilter('Hufflepuff')">Hufflepuff</button>
+          <button class="gryffindor-button" onclick="setCurrentFilter('Gryffindor')" >Gryffindor</button>
+          <button class="ravenclaw-button" onclick="setCurrentFilter('Ravenclaw')">Ravenclaw</button>
+          <button class="slytherin-button" onclick="setCurrentFilter('Slytherin')" >Slytherin</button>      
       </div>
 
       <div class="sorting-buttons">
-        <button class="firstname-button">Sort by first name</button>
-        <button class="lastname-button">Sort by last name</button>
-        <button class="house-button">Sort by house</button>
+        <button class="firstname-button" onclick="sortByFirstName()">Sort by first name</button>
+        <button class="lastname-button" onclick="sortByLastName()" >Sort by last name</button>
+        <button class="house-button" onclick="sortByHouse()">Sort by house</button>
 
       </div>
 
@@ -52,5 +52,6 @@
 
     
   <script src="studentlist.js"></script>
+  
 </body>
 </html>
