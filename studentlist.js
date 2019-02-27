@@ -1,7 +1,8 @@
 "use strict";
 
 const myTemplate = document.querySelector("#myTemplate").content;
-const student_name = document.querySelector(".student_name");
+let modal = document.querySelector(".modal");
+
 const link = "http://petlatkea.dk/2019/hogwarts/students.json";
 //var student = document.querySelector(".student");
 let jsonData;
@@ -158,6 +159,11 @@ function showSingleStudent(student) {
   copy.querySelector(".student_name").innerHTML = student.fullname;
   copy.querySelector(".student_house").innerHTML = student.house;
 
+  copy.querySelector(".details-button").addEventListener("click", () =>
+    fetch(link + student.firstname)
+      .then(promise => promise.json())
+      .then(student => showDetails(student))
+  );
   //ADD CLASS FOR STYLING
 
   if (student.house == "Hufflepuff") {
@@ -172,3 +178,18 @@ function showSingleStudent(student) {
 
   document.querySelector(".student-list").appendChild(copy);
 }
+
+//MODAL
+
+function showDetails(student) {
+  console.log(this.student.firstname);
+  /*
+  modal.querySelector("h2").textContent = product.name;
+  modal.querySelector("img").src =
+    imgbase + "medium/" + product.image + "-md.jpg";
+  modal.querySelector("p").textContent = product.longdescription;
+  modal.classList.remove("hide");*/
+}
+/*
+modal.addEventListener("click", () => modal.classList.add("hide"));
+*/
