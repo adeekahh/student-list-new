@@ -1,20 +1,24 @@
 "use strict";
 
-const myTemplate = document.querySelector("#myTemplate").content;
+const myTemplate = document.querySelector("#studentListTemplate").content;
+const removedTemplate = document.querySelector("#removedListTemplate").content;
 let modal = document.querySelector(".modal");
 
 const link = "http://petlatkea.dk/2019/hogwarts/students.json";
 //var student = document.querySelector(".student");
-let jsonData;
+
 let allStudents = new Array();
 let filteredList = new Array();
+let removedStudents = new Array();
 
 let currentFilter = null;
-let firstname, lastname;
 
 window.addEventListener("DOMContentLoaded", init());
 
 function init() {
+  document.querySelector(".student-list").addEventListener("click", clickList);
+  document.querySelector(".removed-list").addEventListener("click", clickList);
+
   loadJSON();
 }
 
@@ -39,10 +43,18 @@ function prepareObjects(jsonData) {
     student.firstname = nameParts[0];
     student.lastname = nameParts[nameParts.length - 1];
     student.house = student.house;
-    //    student.fullname = student.fullname;
+    student.imageSource =
+      student.lastname.toLowerCase() +
+      "_" +
+      student.firstname.slice(0, 1).toLowerCase() +
+      ".png";
+    student.id = uuidv4();
+    student.fullname = student.fullname;
 
+    //console.log(student);
     //store data in a global array
     allStudents.push(student);
+    //console.log(allStudents);
   });
 }
 
@@ -50,7 +62,7 @@ function prepareObjects(jsonData) {
 /*MAKE BUTTONS FILTER*/
 function filterAll() {
   filteredList = allStudents;
-  console.log(filteredList);
+  //console.log(filteredList);
   showStudents();
 }
 
@@ -65,11 +77,12 @@ function filterFunction(student) {
 
 function filterList() {
   filteredList = allStudents.filter(filterFunction);
+  filteredList.exist = "yes";
   showStudents();
 }
 
 function sortByFirstName() {
-  if (filteredList.length == 0) {
+  if (filteredList.exist == undefined) {
     allStudents.sort(function(a, b) {
       if (a.firstname < b.firstname) {
         return -1;
@@ -94,7 +107,7 @@ function sortByFirstName() {
 }
 
 function sortByLastName() {
-  if (filteredList.length == 0) {
+  if (filteredList.exist == undefined) {
     allStudents.sort(function(a, b) {
       if (a.lastname < b.lastname) {
         return -1;
@@ -119,7 +132,7 @@ function sortByLastName() {
 }
 
 function sortByHouse() {
-  if (filteredList.length == 0) {
+  if (filteredList.exist == undefined) {
     allStudents.sort(function(a, b) {
       if (a.house < b.house) {
         return -1;
@@ -143,8 +156,101 @@ function sortByHouse() {
   showStudents();
 }
 
+//REMOVING STUDENTS
+function clickList(event) {
+  // TODO: Figure out if a button was clicked
+  const action = event.target.dataset.action;
+
+  if (action === "remove") {
+    event.preventDefault();
+    console.log(event.target.dataset.id);
+    clickRemove(event);
+  } else if (action === "details") {
+    event.preventDefault();
+    showDetails(event);
+  }
+}
+
+//MODAL
+
+function showDetails(event) {
+  let id = event.target.dataset.id;
+  showDetailsById(id);
+  event.preventDefault();
+}
+function showDetailsById(id) {
+  let listOfStudents;
+  if (filteredList.exist == undefined) {
+    listOfStudents = allStudents;
+  } else {
+    listOfStudents = filteredList;
+  }
+  let index = listOfStudents.findIndex(student => student.id === id);
+  console.log(index);
+
+  document.querySelector(".modal-name").textContent =
+    listOfStudents[index].fullname;
+  document.querySelector(".modal-img").src =
+    "images/" + listOfStudents[index].imageSource;
+  document.querySelector(".modal-house").textContent =
+    listOfStudents[index].house;
+  modal.classList.remove("hide");
+
+  document.querySelector(".close-modal").addEventListener("click", () => {
+    modal.classList.add("hide");
+  });
+}
+
+function clickRemove(event) {
+  let id = event.target.dataset.id;
+  removeById(id);
+  showStudents();
+}
+
+function removeById(id) {
+  let listOfStudents;
+  if (filteredList.exist == undefined) {
+    listOfStudents = allStudents;
+  } else {
+    listOfStudents = filteredList;
+  }
+
+  let index = listOfStudents.findIndex(student => student.id === id);
+  removedStudents.push(listOfStudents[index]);
+  //console.log(removedStudents);
+  //console.log(listOfStudents[index]);
+  showRemovedStudents();
+  listOfStudents.splice(index, 1);
+}
+
+function showRemovedStudents() {
+  document.querySelector(".removed-list").textContent = "";
+  removedStudents.forEach(showSingleRemovedStudent);
+}
+
+function showSingleRemovedStudent(student) {
+  const copy2 = removedTemplate.cloneNode(true);
+
+  copy2.querySelector(".student_name").innerHTML = student.fullname;
+  copy2.querySelector(".student_house").innerHTML = student.house;
+
+  copy2.querySelector(".details-button").dataset.id = student.id;
+
+  if (student.house == "Hufflepuff") {
+    copy2.querySelector(".student").classList.add("hufflepuff");
+  } else if (student.house == "Gryffindor") {
+    copy2.querySelector(".student").classList.add("gryffindor");
+  } else if (student.house == "Ravenclaw") {
+    copy2.querySelector(".student").classList.add("ravenclaw");
+  } else if (student.house == "Slytherin") {
+    copy2.querySelector(".student").classList.add("sltyherin");
+  }
+
+  document.querySelector(".removed-list").appendChild(copy2);
+}
+
 function showStudents() {
-  if (filteredList.length == 0) {
+  if (filteredList.exist == undefined) {
     document.querySelector(".student-list").innerHTML = "";
     allStudents.forEach(showSingleStudent);
   } else {
@@ -158,12 +264,9 @@ function showSingleStudent(student) {
 
   copy.querySelector(".student_name").innerHTML = student.fullname;
   copy.querySelector(".student_house").innerHTML = student.house;
+  copy.querySelector(".remove-button").dataset.id = student.id;
+  copy.querySelector(".details-button").dataset.id = student.id;
 
-  copy.querySelector(".details-button").addEventListener("click", () =>
-    fetch(link + student.firstname)
-      .then(promise => promise.json())
-      .then(student => showDetails(student))
-  );
   //ADD CLASS FOR STYLING
 
   if (student.house == "Hufflepuff") {
@@ -179,17 +282,10 @@ function showSingleStudent(student) {
   document.querySelector(".student-list").appendChild(copy);
 }
 
-//MODAL
-
-function showDetails(student) {
-  console.log(this.student.firstname);
-  /*
-  modal.querySelector("h2").textContent = product.name;
-  modal.querySelector("img").src =
-    imgbase + "medium/" + product.image + "-md.jpg";
-  modal.querySelector("p").textContent = product.longdescription;
-  modal.classList.remove("hide");*/
+function uuidv4() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
-/*
-modal.addEventListener("click", () => modal.classList.add("hide"));
-*/

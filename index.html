@@ -11,6 +11,14 @@
   <div id="wrapper">
 
     <div class='modal hide'>
+      <img class="modal-img" src="images/abbott_h.png" >
+      <img class ="modal-crest" src="images/crests/hufflepuff.png">
+      <h2 class="modal-name">
+        Abott Hannes
+      </h2>
+      <h3 class ="modal-house">Hufflepuff</h3>
+
+      <p class="close-modal">&#10006;</p>
       
     </div>
             
@@ -27,8 +35,8 @@
       </div>
 
       <div class="sorting-buttons">
-        <button class="firstname-button" onclick="sortByFirstName()">Sort by first name</button>
-        <button class="lastname-button" onclick="sortByLastName()" >Sort by last name</button>
+        <button class="firstname-button" onclick="sortByFirstName()">Sort by first name<br>a->z</button>
+        <button class="lastname-button" onclick="sortByLastName()" >Sort by last name<br>a->z</button>
         <button class="house-button" onclick="sortByHouse()">Sort by house</button>
 
       </div>
@@ -39,20 +47,35 @@
        
     <ul class="student-list">
     </ul>
+
+    <h1 class="removed-title">List of expelled students</h1>
+    <ul class="removed-list">
+    </ul>
     
 
     
 
 
-<template id="myTemplate">
+<template id="studentListTemplate">
     <li class="student">
             <h1 class="student_name"></h1>
             <h2 class="student_house"></h2>
+            <button class="details-button" data-action="details">Details</button>
+            <button class="remove-button" data-action="remove">Expel</button>
     </li>
-    <button class="details-button" onclick="showDetails()">Details</button>
 
  </template>
     
+
+ <template id="removedListTemplate">
+  <li class="student">
+          <h1 class="student_name"></h1>
+          <h2 class="student_house"></h2>
+          <button class="details-button" data-action="details">Details</button>
+          <button class="remove-button" data-action="remove">Remove</button>
+  </li>
+
+</template>
 
 
     
