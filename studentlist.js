@@ -1,25 +1,28 @@
 "use strict";
-
+//TEMPLATES
 const myTemplate = document.querySelector("#studentListTemplate").content;
 const removedTemplate = document.querySelector("#removedListTemplate").content;
+
+//MODAL
 let modal = document.querySelector(".modal");
 
+//LINKS
 const link = "http://petlatkea.dk/2019/hogwarts/students.json";
-//var student = document.querySelector(".student");
+const bloodLink = "http://petlatkea.dk/2019/hogwarts/families.json";
 
+//ARRAYS
 let allStudents = new Array();
 let filteredList = new Array();
 let removedStudents = new Array();
 
+//FILTER
 let currentFilter = null;
 
 window.addEventListener("DOMContentLoaded", init());
 
 function init() {
   document.querySelector(".student-list").addEventListener("click", clickList);
-  document
-    .querySelector(".removed-list")
-    .addEventListener("click", clickRemovedList);
+  document.querySelector(".removed-list").addEventListener("click", clickList);
 
   loadJSON();
 }
@@ -28,7 +31,6 @@ function loadJSON() {
   fetch(link)
     .then(res => res.json())
     .then(jsonData => {
-      //prepare objects
       prepareObjects(jsonData);
       showStudents();
     });
@@ -53,7 +55,7 @@ function prepareObjects(jsonData) {
     student.id = uuidv4();
     student.fullname = student.fullname;
 
-    //console.log(student);
+    console.log(student);
     //store data in a global array
     allStudents.push(student);
 
@@ -171,19 +173,10 @@ function clickList(event) {
   } else if (action === "details") {
     event.preventDefault();
     showDetails(event);
-  }
-}
-
-function clickRemovedList(event) {
-  const action = event.target.dataset.action;
-
-  if (action === "remove") {
-    event.preventDefault();
-    console.log(event.target.dataset.id);
-    //clickRemove(event);
-  } else if (action === "details") {
-    event.preventDefault();
-    showRemovedDetails(event);
+  } else if (action === "removed-details") {
+    console.log("removed details");
+    event.preventDefault(event);
+    showDetails(event);
   }
 }
 
@@ -191,8 +184,17 @@ function clickRemovedList(event) {
 
 function showDetails(event) {
   event.preventDefault();
+  const action = event.target.dataset.action;
   let id = event.target.dataset.id;
-  showDetailsById(id);
+
+  if (action === "details") {
+    event.preventDefault();
+    showDetailsById(id);
+  }
+  if (action === "removed-details") {
+    event.preventDefault();
+    showRemovedDetailsById(id);
+  }
 }
 
 function showRemovedDetails(event) {
