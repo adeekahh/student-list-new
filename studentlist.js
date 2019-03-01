@@ -14,6 +14,12 @@ const bloodLink = "http://petlatkea.dk/2019/hogwarts/families.json";
 let allStudents = new Array();
 let filteredList = new Array();
 let removedStudents = new Array();
+let halfBloods = new Array();
+let pureBloods = new Array();
+
+let jsonData;
+
+let bloodType = null;
 
 //FILTER
 let currentFilter = null;
@@ -33,6 +39,13 @@ function loadJSON() {
     .then(jsonData => {
       prepareObjects(jsonData);
       showStudents();
+    });
+
+  fetch(bloodLink)
+    .then(res => res.json())
+    .then(jsonBloodData => {
+      jsonData = jsonBloodData;
+      prepareBloodTypeArrays(jsonBloodData);
     });
 }
 
@@ -54,8 +67,9 @@ function prepareObjects(jsonData) {
       ".png";
     student.id = uuidv4();
     student.fullname = student.fullname;
+    //student.bloodType = addBloodTypes(student);
 
-    console.log(student);
+    //console.log(student);
     //store data in a global array
     allStudents.push(student);
 
@@ -168,13 +182,13 @@ function clickList(event) {
 
   if (action === "remove") {
     event.preventDefault();
-    console.log(event.target.dataset.id);
+    //console.log(event.target.dataset.id);
     clickRemove(event);
   } else if (action === "details") {
     event.preventDefault();
     showDetails(event);
   } else if (action === "removed-details") {
-    console.log("removed details");
+    //console.log("removed details");
     event.preventDefault(event);
     showDetails(event);
   }
@@ -205,7 +219,7 @@ function showRemovedDetails(event) {
 
 function showRemovedDetailsById(id) {
   let index = removedStudents.findIndex(student => student.id === id);
-  console.log(index);
+  //console.log(index);
 
   document.querySelector(".modal-name").textContent =
     removedStudents[index].fullname;
@@ -228,7 +242,7 @@ function showDetailsById(id) {
     listOfStudents = filteredList;
   }
   let index = listOfStudents.findIndex(student => student.id === id);
-  console.log(index);
+  //console.log(index);
 
   document.querySelector(".modal-name").textContent =
     listOfStudents[index].fullname;
