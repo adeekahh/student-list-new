@@ -17,7 +17,9 @@ window.addEventListener("DOMContentLoaded", init());
 
 function init() {
   document.querySelector(".student-list").addEventListener("click", clickList);
-  document.querySelector(".removed-list").addEventListener("click", clickList);
+  document
+    .querySelector(".removed-list")
+    .addEventListener("click", clickRemovedList);
 
   loadJSON();
 }
@@ -54,6 +56,7 @@ function prepareObjects(jsonData) {
     //console.log(student);
     //store data in a global array
     allStudents.push(student);
+
     //console.log(allStudents);
   });
 }
@@ -171,13 +174,50 @@ function clickList(event) {
   }
 }
 
+function clickRemovedList(event) {
+  const action = event.target.dataset.action;
+
+  if (action === "remove") {
+    event.preventDefault();
+    console.log(event.target.dataset.id);
+    //clickRemove(event);
+  } else if (action === "details") {
+    event.preventDefault();
+    showRemovedDetails(event);
+  }
+}
+
 //MODAL
 
 function showDetails(event) {
+  event.preventDefault();
   let id = event.target.dataset.id;
   showDetailsById(id);
-  event.preventDefault();
 }
+
+function showRemovedDetails(event) {
+  event.preventDefault();
+  let id = event.target.dataset.id;
+  showRemovedDetailsById(id);
+}
+
+function showRemovedDetailsById(id) {
+  let index = removedStudents.findIndex(student => student.id === id);
+  console.log(index);
+
+  document.querySelector(".modal-name").textContent =
+    removedStudents[index].fullname;
+  document.querySelector(".modal-img").src =
+    "images/" + removedStudents[index].imageSource;
+  document.querySelector(".modal-house").textContent =
+    removedStudents[index].house;
+  modal.classList.remove("hide");
+
+  document.querySelector(".close-modal").addEventListener("click", () => {
+    modal.classList.add("hide");
+  });
+}
+
 function showDetailsById(id) {
   let listOfStudents;
   if (filteredList.exist == undefined) {
@@ -202,6 +242,7 @@ function showDetailsById(id) {
 }
 
 function clickRemove(event) {
+  event.preventDefault();
   let id = event.target.dataset.id;
   removeById(id);
   showStudents();
