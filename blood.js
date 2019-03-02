@@ -20,5 +20,3 @@ function loadJson() {
 function prepareBloodTypeArrays(jsonBloodData) {
   console.log(jsonData);
 }
-
-console.log(jsonData);

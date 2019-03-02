@@ -19,8 +19,6 @@ let pureBloods = new Array();
 
 let jsonData;
 
-let bloodType = null;
-
 //FILTER
 let currentFilter = null;
 
@@ -45,9 +43,29 @@ function loadJSON() {
     .then(res => res.json())
     .then(jsonBloodData => {
       jsonData = jsonBloodData;
-      prepareBloodTypeArrays(jsonBloodData);
+      makeBloodTypeArrays(jsonBloodData);
     });
 }
+
+// CREATE BLOOD CLASS ARRAYS
+function makeBloodTypeArrays(data) {
+  for (let i = 0; i < data.half.length; i++) {
+    halfBloods.push(data.half[i]);
+  }
+  for (let j = 0; j < data.pure.length; j++) {
+    pureBloods.push(data.pure[j]);
+  }
+}
+
+function addBloodTypes(student) {
+  let bloodtype = null;
+
+  console.log(pureBloods);
+  console.log(pureBloods.includes(student.lastname));
+  return bloodtype;
+}
+
+console.log(halfBloods, pureBloods);
 
 function prepareObjects(jsonData) {
   jsonData.forEach(jsonObject => {
@@ -67,13 +85,21 @@ function prepareObjects(jsonData) {
       ".png";
     student.id = uuidv4();
     student.fullname = student.fullname;
-    //student.bloodType = addBloodTypes(student);
-
     //console.log(student);
     //store data in a global array
     allStudents.push(student);
 
     //console.log(allStudents);
+  });
+
+  allStudents.forEach(obj => {
+    if (halfBloods.includes(obj.lastname)) {
+      obj.bloodtype = "half";
+    } else if (pureBloods.includes(obj.lastname)) {
+      obj.bloodtype = "pure";
+    } else {
+      obj.bloodtype = "muggle";
+    }
   });
 }
 
@@ -290,6 +316,7 @@ function showSingleRemovedStudent(student) {
 
   copy2.querySelector(".student_name").innerHTML = student.fullname;
   copy2.querySelector(".student_house").innerHTML = student.house;
+  copy2.querySelector(".blood_type").innerHTML = student.bloodtype;
 
   copy2.querySelector(".details-button").dataset.id = student.id;
 
@@ -321,6 +348,8 @@ function showSingleStudent(student) {
 
   copy.querySelector(".student_name").innerHTML = student.fullname;
   copy.querySelector(".student_house").innerHTML = student.house;
+  copy.querySelector(".blood_type").innerHTML = student.bloodtype;
+
   copy.querySelector(".remove-button").dataset.id = student.id;
   copy.querySelector(".details-button").dataset.id = student.id;
 
