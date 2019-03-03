@@ -7,8 +7,8 @@ const removedTemplate = document.querySelector("#removedListTemplate").content;
 let modal = document.querySelector(".modal");
 
 //LINKS
-const link = "http://petlatkea.dk/2019/hogwarts/students.json";
-const bloodLink = "http://petlatkea.dk/2019/hogwarts/families.json";
+const link = "https://petlatkea.dk/2019/hogwarts/students.json";
+const bloodLink = "https://petlatkea.dk/2019/hogwarts/families.json";
 
 //ARRAYS
 let allStudents = new Array();
