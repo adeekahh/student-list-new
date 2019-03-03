@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student List 2</title>
+    <link rel="icon" href="images/crests/hogwarts.png" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="studentlist.css" type="text/css" />
   </head>
   <body>
@@ -46,6 +47,8 @@
         <img class="modal-img" src="#" />
         <h2 class="modal-name">      </h2>
         <h2 class="modal-bloodtype">      </h2>
+        <h2 class="squad-status-title">Inquisitorial Squad Status</h2>
+        <h2 class="squad-status">ASSIGNED      </h2>
         <img class="modal-crest" src="#" />
         
         <h3 class="modal-house"></h3>
@@ -56,7 +59,10 @@
       
 
       <div class="page-header">
+        <div class="student-list-headers">
         <h1 class="page-title">Student List</h1>
+        <h2 class="student-counter">(32)</h2>
+      </div>
 
         <div class="sorting-buttons">
             <div class="dropdown">
@@ -92,10 +98,10 @@
       <tbody class="student-list-body"></tbody>
     </table>
 
-    <h2 class="student-counter"></h2>
-
+    <div class="removed-student-list-headers">
     <h1 class="removed-title">List of expelled students</h1>
     <h2 class="removed-student-counter"></h2>
+  </div>
     <table class="removed-list">
       <thead>
         <th class="name-header">Student Name</th>
@@ -107,16 +113,17 @@
       <tbody class="removed-list-body"></tbody>
     </table>
 
-
+    <div class="squad-student-list-headers">
     <h1 class="squad-title">Inquisitorial Squad</h1>
     <h2 class="squad-counter"></h2>
+  </div>
     <table class="squad-list">
       <thead>
         <th class="name-header">Student Name</th>
         <th class="house-header">House</th>
         <th class="bloodtype-header">Bloodtype</th>
         <th class="details-header">More about student</th>
-        <th class="expel-header">Expel student</th>
+        <th class="squad-header">Remove from inquisitorial squad</th>
         
       </thead>
       <tbody class="squad-body"></tbody>
@@ -170,6 +177,9 @@
               Details
             </button>
           </td>
+          <td>  <button class="squad-button" data-action="squad-remove">
+              Remove
+            </button></td>
         </tr>
       </template>
 

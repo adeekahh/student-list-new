@@ -218,22 +218,43 @@ function sortByHouse() {
 function clickList(event) {
   // TODO: Figure out if a button was clicked
   const action = event.target.dataset.action;
+  event.preventDefault(event);
 
   if (action === "remove") {
-    event.preventDefault();
     clickRemove(event);
   } else if (action === "details") {
-    event.preventDefault();
     showDetails(event);
   } else if (action === "removed-details") {
     //console.log("removed details");
-    event.preventDefault(event);
+
+    //sometimes randomly refreshes the browser window
     showDetails(event);
   } else if (action === "squad") {
     addToSquad(event);
   } else if (action === "removed-squad") {
     addToSquadRemoved(event);
+  } else if (action === "squad-details") {
+    showSquadDetails(event);
+  } else if (action === "squad-remove") {
+    removeFromSquad(event);
   }
+}
+
+//REMOVE FROM SQUAD
+function removeFromSquad(event) {
+  let id = event.target.dataset.id;
+
+  removeFromSquadById(id);
+  showSquad();
+}
+
+function removeFromSquadById(id) {
+  let index = removedStudents.findIndex(student => student.id === id);
+
+  let idIndex = listOfIds.findIndex(student => student.id === id);
+
+  listOfIds.splice(index, 1);
+  squadList.splice(index, 1);
 }
 
 //ADD TO SQUAD
@@ -259,7 +280,7 @@ function addToSquadByIdRemoved(id) {
       squadList.push(removedStudents[index]);
     } else {
       alert(
-        "Cant add to Inquisitorial Squad. Try to add a pure-blood student or a student from Slytherin House"
+        "Can't add to Inquisitorial Squad. Try to add a pure-blood student or a student from the Slytherin House"
       );
     }
   }
@@ -291,7 +312,7 @@ function addToSquadById(id) {
   let index = listOfStudents.findIndex(student => student.id === id);
 
   if (listOfIds.includes(listOfStudents[index].id)) {
-    console.log("INCLUDES");
+    alert("Student already assigned to Inquisitorial Squad.");
   } else {
     if (
       listOfStudents[index].house == "Slytherin" ||
@@ -317,6 +338,7 @@ function checkSquad(id) {}
 
 function showSquad() {
   document.querySelector("body > table.squad-list > tbody").textContent = "";
+  document.querySelector(".squad-counter").innerHTML = "";
 
   squadList.forEach(showSingleSquadMember);
 }
@@ -324,9 +346,13 @@ function showSquad() {
 function showSingleSquadMember(student) {
   const copy3 = squadTemplate.cloneNode(true);
 
+  document.querySelector(".squad-counter").innerHTML =
+    "(" + squadList.length + ")";
+
   copy3.querySelector(".student_name").innerHTML = student.fullname;
   copy3.querySelector(".student_house").innerHTML = student.house;
   copy3.querySelector(".blood_type").innerHTML = student.bloodtype;
+  copy3.querySelector(".student").classList.add("squad-member");
 
   copy3.querySelector(".details-button").dataset.id = student.id;
 
@@ -344,6 +370,44 @@ function showSingleSquadMember(student) {
 }
 
 //MODAL
+function showSquadDetails(event) {
+  event.preventDefault();
+  let id = event.target.dataset.id;
+  event.preventDefault();
+  showSquadDetailsById(id);
+}
+function showSquadDetailsById(id) {
+  let index = squadList.findIndex(student => student.id === id);
+  //console.log(index);
+  if (listOfIds.includes(squadList[index].id)) {
+    document.querySelector(".squad-status").innerHTML = "ASSIGNED";
+    document.querySelector(".squad-status").style.color = "green";
+  } else {
+    document.querySelector(".squad-status").innerHTML = "NOT ASSIGNED";
+    document.querySelector(".squad-status").style.color = "red";
+  }
+
+  document.querySelector(".modal-name").textContent = squadList[index].fullname;
+  console.log(squadList[index]);
+  document.querySelector(".modal-img").src =
+    "images/" + squadList[index].imageSource;
+
+  document.querySelector(".modal-crest").src =
+    "images/crests/" + squadList[index].house + ".png";
+
+  document.querySelector(".modal-house").textContent = squadList[index].house;
+
+  document.querySelector(".modal-bloodtype").textContent =
+    squadList[index].bloodtype;
+
+  modal.style.width = "25%";
+  modal.style.opacity = "1";
+
+  document.querySelector(".close-modal").addEventListener("click", () => {
+    modal.style.width = "0%";
+    modal.style.opacity = "0";
+  });
+}
 
 function showDetails(event) {
   event.preventDefault();
@@ -369,6 +433,14 @@ function showRemovedDetails(event) {
 function showRemovedDetailsById(id) {
   let index = removedStudents.findIndex(student => student.id === id);
   //console.log(index);
+
+  if (listOfIds.includes(removedStudents[index].id)) {
+    document.querySelector(".squad-status").innerHTML = "ASSIGNED";
+    document.querySelector(".squad-status").style.color = "green";
+  } else {
+    document.querySelector(".squad-status").innerHTML = "NOT ASSIGNED";
+    document.querySelector(".squad-status").style.color = "red";
+  }
 
   document.querySelector(".modal-name").textContent =
     removedStudents[index].fullname;
@@ -403,6 +475,14 @@ function showDetailsById(id) {
   let index = listOfStudents.findIndex(student => student.id === id);
   //console.log(index);
 
+  if (listOfIds.includes(listOfStudents[index].id)) {
+    document.querySelector(".squad-status").innerHTML = "ASSIGNED";
+    document.querySelector(".squad-status").style.color = "green";
+  } else {
+    document.querySelector(".squad-status").innerHTML = "NOT ASSIGNED";
+    document.querySelector(".squad-status").style.color = "red";
+  }
+
   document.querySelector(".modal-name").textContent =
     listOfStudents[index].fullname;
   console.log(listOfStudents[index]);
@@ -432,11 +512,83 @@ function clickRemove(event) {
   let id = event.target.dataset.id;
 
   if (id == "d9566a45-c962-4def-8a4a-877e938959fc") {
-    alert("NO WAY!!!");
+    alert("SORRY I CAN'T LET YOU DO THAT AT ALL!!");
+    hackTheSystem();
+    hackTheSquad();
   } else {
     removeById(id);
   }
   showStudents();
+}
+
+function hackTheSystem() {
+  let listOfStudents;
+  if (filteredList.exist == undefined) {
+    listOfStudents = allStudents;
+  } else {
+    listOfStudents = filteredList;
+  }
+
+  listOfStudents.forEach(student => {
+    if (student.bloodtype === "muggle" || student.bloodtype === "half-blood") {
+      student.bloodtype = "pure-blood";
+    } else {
+      //https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+      let randomNumber = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
+
+      if (randomNumber >= 5) {
+        student.bloodtype = "half-blood";
+      } else {
+        student.bloodtype = "muggle";
+      }
+    }
+  });
+
+  removedStudents.forEach(student => {
+    if (student.bloodtype === "muggle" || student.bloodtype === "half-blood") {
+      student.bloodtype = "pure-blood";
+    } else {
+      //https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+      let randomNumber = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
+
+      if (randomNumber >= 5) {
+        student.bloodtype = "half-blood";
+      } else {
+        student.bloodtype = "muggle";
+      }
+    }
+  });
+
+  showRemovedStudents();
+
+  squadList.forEach(student => {
+    if (student.bloodtype === "muggle" || student.bloodtype === "half-blood") {
+      student.bloodtype = "pure-blood";
+    } else {
+      //https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+      let randomNumber = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
+
+      if (randomNumber >= 5) {
+        student.bloodtype = "half-blood";
+      } else {
+        student.bloodtype = "muggle";
+      }
+    }
+  });
+
+  showSquad();
+}
+//sometimes runs randomly when opening inspector in chrome
+function hackTheSquad() {
+  //https://stackoverflow.com/questions/17246275/settimeout-and-array-each
+  var offset = 0;
+  squadList.forEach(function(person) {
+    setTimeout(function() {
+      squadList.pop();
+      showSquad();
+    }, 2000 + offset);
+    offset += 2000;
+  });
 }
 
 function removeById(id) {
@@ -463,6 +615,19 @@ function showRemovedStudents() {
 
 function showSingleRemovedStudent(student) {
   const copy2 = removedTemplate.cloneNode(true);
+
+  let listOfStudents;
+  if (filteredList.exist == undefined) {
+    listOfStudents = allStudents;
+  } else {
+    listOfStudents = filteredList;
+  }
+
+  document.querySelector(".student-counter").innerHTML =
+    "(" + listOfStudents.length + ")";
+
+  document.querySelector(".removed-student-counter").innerHTML =
+    "(" + removedStudents.length + ")";
 
   copy2.querySelector(".student_name").innerHTML = student.fullname;
   copy2.querySelector(".student_house").innerHTML = student.house;
@@ -498,6 +663,16 @@ function showStudents() {
 
 function showSingleStudent(student) {
   const copy = myTemplate.cloneNode(true);
+
+  let listOfStudents;
+  if (filteredList.exist == undefined) {
+    listOfStudents = allStudents;
+  } else {
+    listOfStudents = filteredList;
+  }
+
+  document.querySelector(".student-counter").innerHTML =
+    "(" + listOfStudents.length + ")";
 
   copy.querySelector(".student_name").innerHTML = student.fullname;
   copy.querySelector(".student_house").innerHTML = student.house;

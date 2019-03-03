@@ -32,7 +32,7 @@ header {
 
 .page-header {
   display: flex;
-  padding-top: 6em;
+  padding-top: 8em;
   margin-bottom: 2em;
   align-items: baseline;
 }
@@ -91,6 +91,7 @@ header {
   margin-right: auto;
   background-color: #f4f6f7;
   border-radius: 8px;
+  box-shadow: 8px 8px 50px 0px lightgrey;
 
   padding-top: 1.5em;
   padding-bottom: 1.5em;
@@ -119,6 +120,7 @@ td.student_name {
   margin-right: auto;
   list-style-type: none;
   border-radius: 4px;
+  transition: all 4s ease;
 }
 
 button {
@@ -159,11 +161,27 @@ button.squad-button {
   margin-top: 0.5em;
 }
 
-.removed-title,
-.squad-title {
-  margin-left: 1em;
-  margin-top: 2em;
-  margin-bottom: 1em;
+.student-list-headers {
+  display: flex;
+  align-items: center;
+}
+
+.fade-away {
+  transition: opacity 4s ease-in;
+  opacity: 0;
+}
+
+.removed-student-list-headers,
+.squad-student-list-headers {
+  display: flex;
+  padding: 4em 0 2em 0;
+  align-items: center;
+}
+
+h2.student-counter,
+h2.removed-student-counter,
+h2.squad-counter {
+  margin-left: 0.5em;
 }
 
 .modal {
@@ -173,6 +191,7 @@ button.squad-button {
   box-sizing: border-box;
   position: fixed;
   background-color: #dce2e6;
+  text-align: center;
   /* top: 50%; */
   /* left: 50%; */
   right: 0;
@@ -223,11 +242,12 @@ img.modal-crest {
   position: absolute;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 8px 16px 0px rgba(255, 255, 250, 0.2);
   padding: 12px 16px;
   margin-bottom: 0.5em;
   z-index: 1;
   right: 0;
+  border-radius: 8px;
 }
 
 .dropdown:hover .dropdown-content {
