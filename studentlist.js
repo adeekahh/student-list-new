@@ -393,7 +393,7 @@ function showSquadDetailsById(id) {
     "images/" + squadList[index].imageSource;
 
   document.querySelector(".modal-crest").src =
-    "images/crests/" + squadList[index].house + ".png";
+    "images/crests/" + squadList[index].house.toLowerCase() + ".png";
 
   document.querySelector(".modal-house").textContent = squadList[index].house;
 
@@ -454,7 +454,7 @@ function showRemovedDetailsById(id) {
     removedStudents[index].bloodtype;
 
   document.querySelector(".modal-crest").src =
-    "images/crests/" + removedStudents[index].house + ".png";
+    "images/crests/" + removedStudents[index].house.toLowerCase() + ".png";
 
   modal.style.width = "25%";
   modal.style.opacity = "1";
@@ -490,7 +490,7 @@ function showDetailsById(id) {
     "images/" + listOfStudents[index].imageSource;
 
   document.querySelector(".modal-crest").src =
-    "images/crests/" + listOfStudents[index].house + ".png";
+    "images/crests/" + listOfStudents[index].house.toLowerCase() + ".png";
 
   document.querySelector(".modal-house").textContent =
     listOfStudents[index].house;
