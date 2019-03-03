@@ -16,6 +16,7 @@ let filteredList = new Array();
 let removedStudents = new Array();
 let halfBloods = new Array();
 let pureBloods = new Array();
+let squadList = new Array();
 
 let jsonData;
 
@@ -57,16 +58,6 @@ function makeBloodTypeArrays(data) {
   }
 }
 
-function addBloodTypes(student) {
-  let bloodtype = null;
-
-  console.log(pureBloods);
-  console.log(pureBloods.includes(student.lastname));
-  return bloodtype;
-}
-
-console.log(halfBloods, pureBloods);
-
 function prepareObjects(jsonData) {
   jsonData.forEach(jsonObject => {
     //create new object
@@ -92,13 +83,32 @@ function prepareObjects(jsonData) {
     //console.log(allStudents);
   });
 
-  allStudents.forEach(obj => {
-    if (halfBloods.includes(obj.lastname)) {
-      obj.bloodtype = "half";
-    } else if (pureBloods.includes(obj.lastname)) {
-      obj.bloodtype = "pure";
+  insertMyself();
+
+  addBloodTypes();
+}
+
+function insertMyself() {
+  var myself = {
+    firstname: "Ádám",
+    fullname: "Ádám Molnár",
+    lastname: "Molnár",
+    house: "Gryffindor",
+    bloodtype: "pure",
+    imageSource: "unknown.png",
+    id: "d9566a45-c962-4def-8a4a-877e938959fc"
+  };
+  allStudents.unshift(myself);
+}
+
+function addBloodTypes() {
+  allStudents.forEach(student => {
+    if (halfBloods.includes(student.lastname)) {
+      student.bloodtype = "half";
+    } else if (pureBloods.includes(student.lastname)) {
+      student.bloodtype = "pure";
     } else {
-      obj.bloodtype = "muggle";
+      student.bloodtype = "muggle";
     }
   });
 }
@@ -208,7 +218,6 @@ function clickList(event) {
 
   if (action === "remove") {
     event.preventDefault();
-    //console.log(event.target.dataset.id);
     clickRemove(event);
   } else if (action === "details") {
     event.preventDefault();
@@ -217,7 +226,14 @@ function clickList(event) {
     //console.log("removed details");
     event.preventDefault(event);
     showDetails(event);
+  } else if (action === "squad") {
+    addToSquad(event);
   }
+}
+
+//ADD TO SQUAD
+function addToSquad(event) {
+  console.log(event.target.dataset.id);
 }
 
 //MODAL
@@ -286,7 +302,12 @@ function showDetailsById(id) {
 function clickRemove(event) {
   event.preventDefault();
   let id = event.target.dataset.id;
-  removeById(id);
+
+  if (id == "d9566a45-c962-4def-8a4a-877e938959fc") {
+    console.log("ANYÁD");
+  } else {
+    removeById(id);
+  }
   showStudents();
 }
 
@@ -300,8 +321,6 @@ function removeById(id) {
 
   let index = listOfStudents.findIndex(student => student.id === id);
   removedStudents.push(listOfStudents[index]);
-  //console.log(removedStudents);
-  //console.log(listOfStudents[index]);
   showRemovedStudents();
   listOfStudents.splice(index, 1);
 }
@@ -319,6 +338,7 @@ function showSingleRemovedStudent(student) {
   copy2.querySelector(".blood_type").innerHTML = student.bloodtype;
 
   copy2.querySelector(".details-button").dataset.id = student.id;
+  copy2.querySelector(".squad-button").dataset.id = student.id;
 
   if (student.house == "Hufflepuff") {
     copy2.querySelector(".student").classList.add("hufflepuff");
@@ -352,6 +372,7 @@ function showSingleStudent(student) {
 
   copy.querySelector(".remove-button").dataset.id = student.id;
   copy.querySelector(".details-button").dataset.id = student.id;
+  copy.querySelector(".squad-button").dataset.id = student.id;
 
   //ADD CLASS FOR STYLING
 

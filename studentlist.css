@@ -109,7 +109,8 @@ button {
 }
 
 button.remove-button,
-button.details-button {
+button.details-button,
+button.squad-button {
   display: inherit;
   width: 100%;
   margin-top: 0.5em;
