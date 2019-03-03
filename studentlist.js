@@ -1,7 +1,8 @@
 "use strict";
 //TEMPLATES
 const myTemplate = document.querySelector("#studentListTemplate").content;
-const removedTemplate = document.querySelector("#removedListTemplate").content;
+const removedTemplate = document.querySelector("#removedStudentListTemplate")
+  .content;
 
 //MODAL
 let modal = document.querySelector(".modal");
@@ -27,6 +28,7 @@ window.addEventListener("DOMContentLoaded", init());
 
 function init() {
   document.querySelector(".student-list").addEventListener("click", clickList);
+
   document.querySelector(".removed-list").addEventListener("click", clickList);
 
   loadJSON();
@@ -36,15 +38,13 @@ function loadJSON() {
   fetch(link)
     .then(res => res.json())
     .then(jsonData => {
-      prepareObjects(jsonData);
-      showStudents();
-    });
-
-  fetch(bloodLink)
-    .then(res => res.json())
-    .then(jsonBloodData => {
-      jsonData = jsonBloodData;
-      makeBloodTypeArrays(jsonBloodData);
+      fetch(bloodLink)
+        .then(res1 => res1.json())
+        .then(jsonBloodData => {
+          makeBloodTypeArrays(jsonBloodData);
+          prepareObjects(jsonData);
+          showStudents();
+        });
     });
 }
 
@@ -83,9 +83,8 @@ function prepareObjects(jsonData) {
     //console.log(allStudents);
   });
 
-  insertMyself();
-
   addBloodTypes();
+  insertMyself();
 }
 
 function insertMyself() {
@@ -94,7 +93,7 @@ function insertMyself() {
     fullname: "Ádám Molnár",
     lastname: "Molnár",
     house: "Gryffindor",
-    bloodtype: "pure",
+    bloodtype: "pure-blood",
     imageSource: "unknown.png",
     id: "d9566a45-c962-4def-8a4a-877e938959fc"
   };
@@ -103,10 +102,10 @@ function insertMyself() {
 
 function addBloodTypes() {
   allStudents.forEach(student => {
-    if (halfBloods.includes(student.lastname)) {
-      student.bloodtype = "half";
-    } else if (pureBloods.includes(student.lastname)) {
-      student.bloodtype = "pure";
+    if (pureBloods.includes(student.lastname)) {
+      student.bloodtype = "pure-blood";
+    } else if (halfBloods.includes(student.lastname)) {
+      student.bloodtype = "half-blood";
     } else {
       student.bloodtype = "muggle";
     }
@@ -288,8 +287,13 @@ function showDetailsById(id) {
 
   document.querySelector(".modal-name").textContent =
     listOfStudents[index].fullname;
+  console.log(listOfStudents[index]);
   document.querySelector(".modal-img").src =
     "images/" + listOfStudents[index].imageSource;
+
+  document.querySelector(".modal-crest").src =
+    "images/crests/" + listOfStudents[index].house + ".png";
+
   document.querySelector(".modal-house").textContent =
     listOfStudents[index].house;
   modal.classList.remove("hide");
