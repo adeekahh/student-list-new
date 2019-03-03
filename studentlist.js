@@ -232,11 +232,46 @@ function clickList(event) {
   } else if (action === "squad") {
     addToSquad(event);
   } else if (action === "removed-squad") {
-    addToSquad(event);
+    addToSquadRemoved(event);
   }
 }
 
 //ADD TO SQUAD
+function addToSquadRemoved(event) {
+  event.preventDefault();
+  let id = event.target.dataset.id;
+
+  addToSquadByIdRemoved(id);
+
+  showStudents();
+}
+
+function addToSquadByIdRemoved(id) {
+  let index = removedStudents.findIndex(student => student.id === id);
+
+  if (listOfIds.includes(removedStudents[index].id)) {
+    console.log("INCLUDES");
+  } else {
+    if (
+      removedStudents[index].house == "Slytherin" ||
+      removedStudents[index].bloodtype == "pure-blood"
+    ) {
+      squadList.push(removedStudents[index]);
+    } else {
+      alert(
+        "Cant add to Inquisitorial Squad. Try to add a pure-blood student or a student from Slytherin House"
+      );
+    }
+  }
+  squadList.forEach(student => {
+    listOfIds.push(student.id);
+  });
+
+  console.log(listOfIds);
+
+  showSquad();
+}
+
 function addToSquad(event) {
   event.preventDefault();
   let id = event.target.dataset.id;
@@ -253,13 +288,21 @@ function addToSquadById(id) {
   } else {
     listOfStudents = filteredList;
   }
-
   let index = listOfStudents.findIndex(student => student.id === id);
 
   if (listOfIds.includes(listOfStudents[index].id)) {
     console.log("INCLUDES");
   } else {
-    squadList.push(listOfStudents[index]);
+    if (
+      listOfStudents[index].house == "Slytherin" ||
+      listOfStudents[index].bloodtype == "pure-blood"
+    ) {
+      squadList.push(listOfStudents[index]);
+    } else {
+      alert(
+        "Cant add to Inquisitorial Squad. Try to add a pure-blood student or a student from Slytherin House"
+      );
+    }
   }
   squadList.forEach(student => {
     listOfIds.push(student.id);
@@ -389,7 +432,7 @@ function clickRemove(event) {
   let id = event.target.dataset.id;
 
   if (id == "d9566a45-c962-4def-8a4a-877e938959fc") {
-    console.log("ANYÁD");
+    alert("NO WAY!!!");
   } else {
     removeById(id);
   }
