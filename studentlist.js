@@ -1,6 +1,8 @@
 "use strict";
 //TEMPLATES
 const myTemplate = document.querySelector("#studentListTemplate").content;
+const squadTemplate = document.querySelector("#squadStudentListTemplate")
+  .content;
 const removedTemplate = document.querySelector("#removedStudentListTemplate")
   .content;
 
@@ -18,6 +20,7 @@ let removedStudents = new Array();
 let halfBloods = new Array();
 let pureBloods = new Array();
 let squadList = new Array();
+let listOfIds = new Array();
 
 let jsonData;
 
@@ -30,6 +33,7 @@ function init() {
   document.querySelector(".student-list").addEventListener("click", clickList);
 
   document.querySelector(".removed-list").addEventListener("click", clickList);
+  document.querySelector(".squad-list").addEventListener("click", clickList);
 
   loadJSON();
 }
@@ -227,12 +231,73 @@ function clickList(event) {
     showDetails(event);
   } else if (action === "squad") {
     addToSquad(event);
+  } else if (action === "removed-squad") {
+    addToSquad(event);
   }
 }
 
 //ADD TO SQUAD
 function addToSquad(event) {
-  console.log(event.target.dataset.id);
+  event.preventDefault();
+  let id = event.target.dataset.id;
+
+  addToSquadById(id);
+
+  showStudents();
+}
+
+function addToSquadById(id) {
+  let listOfStudents;
+  if (filteredList.exist == undefined) {
+    listOfStudents = allStudents;
+  } else {
+    listOfStudents = filteredList;
+  }
+
+  let index = listOfStudents.findIndex(student => student.id === id);
+
+  if (listOfIds.includes(listOfStudents[index].id)) {
+    console.log("INCLUDES");
+  } else {
+    squadList.push(listOfStudents[index]);
+  }
+  squadList.forEach(student => {
+    listOfIds.push(student.id);
+  });
+
+  console.log(listOfIds);
+
+  showSquad();
+}
+
+function checkSquad(id) {}
+
+function showSquad() {
+  document.querySelector("body > table.squad-list > tbody").textContent = "";
+
+  squadList.forEach(showSingleSquadMember);
+}
+
+function showSingleSquadMember(student) {
+  const copy3 = squadTemplate.cloneNode(true);
+
+  copy3.querySelector(".student_name").innerHTML = student.fullname;
+  copy3.querySelector(".student_house").innerHTML = student.house;
+  copy3.querySelector(".blood_type").innerHTML = student.bloodtype;
+
+  copy3.querySelector(".details-button").dataset.id = student.id;
+
+  if (student.house == "Hufflepuff") {
+    copy3.querySelector(".student").classList.add("hufflepuff");
+  } else if (student.house == "Gryffindor") {
+    copy3.querySelector(".student").classList.add("gryffindor");
+  } else if (student.house == "Ravenclaw") {
+    copy3.querySelector(".student").classList.add("ravenclaw");
+  } else if (student.house == "Slytherin") {
+    copy3.querySelector(".student").classList.add("sltyherin");
+  }
+
+  document.querySelector("body > table.squad-list > tbody").appendChild(copy3);
 }
 
 //MODAL
@@ -266,12 +331,22 @@ function showRemovedDetailsById(id) {
     removedStudents[index].fullname;
   document.querySelector(".modal-img").src =
     "images/" + removedStudents[index].imageSource;
+
   document.querySelector(".modal-house").textContent =
     removedStudents[index].house;
-  modal.classList.remove("hide");
+
+  document.querySelector(".modal-bloodtype").textContent =
+    removedStudents[index].bloodtype;
+
+  document.querySelector(".modal-crest").src =
+    "images/crests/" + removedStudents[index].house + ".png";
+
+  modal.style.width = "25%";
+  modal.style.opacity = "1";
 
   document.querySelector(".close-modal").addEventListener("click", () => {
-    modal.classList.add("hide");
+    modal.style.width = "0%";
+    modal.style.opacity = "0";
   });
 }
 
@@ -296,10 +371,16 @@ function showDetailsById(id) {
 
   document.querySelector(".modal-house").textContent =
     listOfStudents[index].house;
-  modal.classList.remove("hide");
+
+  document.querySelector(".modal-bloodtype").textContent =
+    listOfStudents[index].bloodtype;
+
+  modal.style.width = "25%";
+  modal.style.opacity = "1";
 
   document.querySelector(".close-modal").addEventListener("click", () => {
-    modal.classList.add("hide");
+    modal.style.width = "0%";
+    modal.style.opacity = "0";
   });
 }
 
@@ -330,7 +411,10 @@ function removeById(id) {
 }
 
 function showRemovedStudents() {
-  document.querySelector(".removed-list").textContent = "";
+  document.querySelector("body > table.removed-list > tbody").textContent = "";
+
+  document.querySelector(".removed-list").insertRow(0);
+
   removedStudents.forEach(showSingleRemovedStudent);
 }
 
@@ -354,15 +438,17 @@ function showSingleRemovedStudent(student) {
     copy2.querySelector(".student").classList.add("sltyherin");
   }
 
-  document.querySelector(".removed-list").appendChild(copy2);
+  document
+    .querySelector("body > table.removed-list > tbody")
+    .appendChild(copy2);
 }
 
 function showStudents() {
   if (filteredList.exist == undefined) {
-    document.querySelector(".student-list").innerHTML = "";
+    document.querySelector(".student-list-body").innerHTML = "";
     allStudents.forEach(showSingleStudent);
   } else {
-    document.querySelector(".student-list").innerHTML = "";
+    document.querySelector(".student-list-body").innerHTML = "";
     filteredList.forEach(showSingleStudent);
   }
 }
@@ -390,7 +476,7 @@ function showSingleStudent(student) {
     copy.querySelector(".student").classList.add("sltyherin");
   }
 
-  document.querySelector(".student-list").appendChild(copy);
+  document.querySelector(".student-list-body").appendChild(copy);
 }
 
 function uuidv4() {

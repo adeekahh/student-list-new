@@ -40,51 +40,56 @@
     </header>
 
     <div id="wrapper">
-      <div class="modal hide">
-        <img class="modal-img" src="images/abbott_h.png" />
-        <img class="modal-crest" src="images/crests/hufflepuff.png" />
-        <h2 class="modal-name">
-          Abott Hannes
-        </h2>
-        <h3 class="modal-house">Hufflepuff</h3>
+
+
+    <div class="modal ">
+        <img class="modal-img" src="#" />
+        <h2 class="modal-name">      </h2>
+        <h2 class="modal-bloodtype">      </h2>
+        <img class="modal-crest" src="#" />
+        
+        <h3 class="modal-house"></h3>
 
         <p class="close-modal">&#10006;</p>
       </div>
+
+      
 
       <div class="page-header">
         <h1 class="page-title">Student List</h1>
 
         <div class="sorting-buttons">
-          <button class="firstname-button" onclick="sortByFirstName()">
-            Sort by first name
-          </button>
-          <button class="lastname-button" onclick="sortByLastName()">
-            Sort by last name
-          </button>
-          <button class="house-button" onclick="sortByHouse()">
-            Sort by house
-          </button>
+            <div class="dropdown">
+                <span class="dropdown-sort">Sort list</span>
+                <div class="dropdown-content">
+                    <button class="firstname-button" onclick="sortByFirstName()">
+                        Sort by first name
+                      </button>
+                      <button class="lastname-button" onclick="sortByLastName()">
+                        Sort by last name
+                      </button>
+                      <button class="house-button" onclick="sortByHouse()">
+                        Sort by house
+                      </button>
+                </div>
+              </div>
+
+
+         
         </div>
       </div>
     </div>
 
-    <table class="student-list-headers">
-      <tr>
-        <th class="name-header">Student Name</th>
-        <th class="house-header">House</th>
-        <th class="bloodtype-header">Bloodtype</th>
-        <th class="bloodtype-header">Details</th>
-        <th class="bloodtype-header">Expel Student</th>
-        <th class="bloodtype-header">Add to Inquisitorial Squad</th>
-      </tr>
-    </table>
-
     <table class="student-list">
-      <tr>
+      <thead>
         <th class="name-header">Student Name</th>
         <th class="house-header">House</th>
         <th class="bloodtype-header">Bloodtype</th>
-      </tr>
+        <th class="details-header">More about student</th>
+        <th class="expel-header">Expel student</th>
+        <th class="squad-header">Add to inquisitorial squad</th>
+      </thead>
+      <tbody class="student-list-body"></tbody>
     </table>
 
     <h2 class="student-counter"></h2>
@@ -92,11 +97,29 @@
     <h1 class="removed-title">List of expelled students</h1>
     <h2 class="removed-student-counter"></h2>
     <table class="removed-list">
-      <tr>
+      <thead>
         <th class="name-header">Student Name</th>
         <th class="house-header">House</th>
         <th class="bloodtype-header">Bloodtype</th>
-      </tr>
+        <th class="details-header">More about student</th>
+        <th class="squad-header">Add to inquisitorial squad</th>
+      </thed>
+      <tbody class="removed-list-body"></tbody>
+    </table>
+
+
+    <h1 class="squad-title">Inquisitorial Squad</h1>
+    <h2 class="squad-counter"></h2>
+    <table class="squad-list">
+      <thead>
+        <th class="name-header">Student Name</th>
+        <th class="house-header">House</th>
+        <th class="bloodtype-header">Bloodtype</th>
+        <th class="details-header">More about student</th>
+        <th class="expel-header">Expel student</th>
+        
+      </thead>
+      <tbody class="squad-body"></tbody>
     </table>
 
     <template id="studentListTemplate">
@@ -128,14 +151,27 @@
             Details
           </button>
         </td>
-        <td class="remove-buttond-td">
-          <button class="remove-button" data-action="remove">Remove</button>
-        </td>
+  
         <td class="squad-button-td">
-          <button class="squad-button" data-action="squad">Add to squad</button>
+          <button class="squad-button" data-action="squad">
+            Add to squad
+          </button>
         </td>
       </tr>
     </template>
+
+    <template id="squadStudentListTemplate">
+        <tr class="student">
+          <td class="student_name"></td>
+          <td class="student_house"></td>
+          <td class="blood_type"></td>
+          <td class="details-button-td">
+            <button class="details-button" data-action="squad-details">
+              Details
+            </button>
+          </td>
+        </tr>
+      </template>
 
     <script src="studentlist.js"></script>
     -->
